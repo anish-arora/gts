@@ -1,0 +1,17 @@
+---
+- name: Get the status of last rear run
+  hosts:  all 
+  become: true
+
+  vars:
+    my_dir: /var/log/rear
+
+  tasks:
+
+  - name: tail /var/log/rear/rear-$(HOSTNAME).log file for the status
+    shell: >
+       tail -10 {{ my_dir }}/rear-{{ inventory_hostname }}.log
+    register: exit_code
+
+  - name: Print the exit_code of ReaR
+    debug: var=exit_code.stdout

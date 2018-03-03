@@ -1,0 +1,10 @@
+---
+- name: Copy rear_1_17_2_05_create_mappings_dir.sh to /usr/share/rear/verify/default/05_create_mappings_dir.sh
+  hosts:  new 
+  become: yes
+
+
+  tasks:
+
+  - name: Copy the rear_1_17_2_05_create_mappings_dir.sh to  /usr/share/rear/verify/default/05_create_mappings_dir.sh
+    copy: src=files/rear_1_17_2_05_create_mappings_dir.sh dest=/usr/share/rear/verify/default/05_create_mappings_dir.sh mode=0644

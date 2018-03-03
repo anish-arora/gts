@@ -1,0 +1,29 @@
+- name: move the /etc/ntp/step-tickers file - ABFD-2139
+
+  vars:
+    timestamp: "{{ lookup('pipe', 'date +%Y%m%d') }}"
+    tier: "newuat"
+
+  hosts: "{{ tier }}"
+  become: true
+
+
+  tasks:
+
+    - name: stat step-tickers
+      stat: path=/etc/ntp/step-tickers
+      register: step_file
+
+    # Caveat: the 'copy' module expect /etc/ntp/step-tickers to be local on THIS host and not on the remote system
+    # We must foresee a better way in the future if we want to copy something aside on the remote system!
+    # Perhaps, use 'shell' module instead to copy file on the remote system
+    #- name: move /etc/ntp/step-tickers to /etc/ntp/step-tickers-{{ timestamp }}
+    #  copy: src=/etc/ntp/step-tickers dest=/etc/ntp/step-tickers-{{ timestamp }}
+    #  when: step_file.stat.exists
+    - name: move /etc/ntp/step-tickers to /etc/ntp/step-tickers-{{ timestamp }}
+      shell: cp -p /etc/ntp/step-tickers /etc/ntp/step-tickers-{{ timestamp }}
+      when: step_file.stat.exists
+
+    - name: removed /etc/ntp/step-tickers
+      file: path=/etc/ntp/step-tickers state=absent
+

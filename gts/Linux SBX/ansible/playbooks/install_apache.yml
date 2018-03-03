@@ -1,0 +1,31 @@
+---
+- name: Configure Apache
+  hosts: ITSGBHHLSP00417
+  become: true
+
+  vars:
+    packages_dir: /var/www/html/packages
+
+  handlers:
+
+  - name: restart-apache
+    service: name=httpd state=restarted
+
+  tasks:
+
+  - name: Install Apache
+    yum: pkg=httpd state=installed
+
+  - name: Add yum packages
+    template: src=templates/gtsc-repo.conf dest=/etc/httpd/conf.d/
+    notify:
+    - restart-apache
+
+  - name: Start and Enable Apache
+    service: name=httpd state=started enabled=yes
+
+  - name: Make sure the target directory is created
+    file:
+      path: "{{ packages_dir }}"
+      state: directory
+      mode: 0755

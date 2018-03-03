@@ -1,0 +1,9 @@
+---
+- name: Disable ABRT daemon
+  hosts:  new 
+  become: true
+
+  tasks:
+
+  - name: Stop and disable abrtd daemon process
+    service: name=abrtd state=stopped enabled=no
